@@ -3,5 +3,9 @@
   "version": "0.0.1",
   "main": "index.js",
   "author": "https://github.com/mrphblade",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^24.5.2",
+    "typescript": "^5.9.2"
+  }
 }
