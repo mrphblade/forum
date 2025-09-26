@@ -8,10 +8,14 @@
     "lint:check": "eslint .",
     "lint:fix": "eslint . --fix",
     "format:check": "prettier --check .",
-    "format:fix": "prettier --write ."
+    "format:fix": "prettier --write .",
+    "build:ts": "tsc && tsc-alias",
+    "dev": "ts-node -r tsconfig-paths/register src/server.ts",
+    "start": "yarn run build:ts && node dist/server.js"
   },
   "devDependencies": {
     "@eslint/js": "^9.36.0",
+    "@types/express": "^5.0.3",
     "@types/node": "^24.5.2",
     "@typescript-eslint/eslint-plugin": "^8.44.1",
     "@typescript-eslint/parser": "^8.44.1",
@@ -20,7 +24,13 @@
     "eslint-plugin-prettier": "^5.5.4",
     "globals": "^16.4.0",
     "prettier": "^3.6.2",
+    "ts-node": "^10.9.2",
+    "tsc-alias": "^1.8.16",
+    "tsconfig-paths": "^4.2.0",
     "typescript": "^5.9.2",
     "typescript-eslint": "^8.44.1"
+  },
+  "dependencies": {
+    "express": "^5.1.0"
   }
 }
