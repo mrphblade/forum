@@ -28,5 +28,18 @@
     "moduleDetection": "force",
     "skipLibCheck": true,
     "allowSyntheticDefaultImports": true,
+
+    "baseUrl": "src",
+    "paths": {
+      "@/*": ["./*"],
+      "@controllers/*": ["./controllers/*"],
+      "@routes/*": ["./routes/*"],
+      "@services/*": ["./services/*"],
+      "@utils/*": ["./utils/*"],
+      "@config/*": ["./config/*"],
+      "types/*": ["./types/*"],
+      "@errors/*": ["./errors/*"],
+      "@middlewares/*": ["./middlewares/*"]
+    }
   }
 }
