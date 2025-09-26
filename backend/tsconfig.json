@@ -34,6 +34,7 @@
     "paths": {
       "@/*": ["./*"],
       "@controllers/*": ["./controllers/*"],
+      "@repositories/*": ["./repositories/*"],
       "@routes/*": ["./routes/*"],
       "@services/*": ["./services/*"],
       "@utils/*": ["./utils/*"],
