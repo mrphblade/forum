@@ -14,13 +14,14 @@ enum UserRoles {
 }
 
 model User {
-  id         Int       @id @default(autoincrement())
-  username   String    @unique
-  email      String    @unique
-  password   String
-  role       UserRoles @default(user)
-  avatarPath String?
-  createdAt  DateTime  @default(now())
+  id           Int       @id @default(autoincrement())
+  username     String    @unique
+  email        String    @unique
+  password     String
+  role         UserRoles @default(user)
+  avatarPath   String?
+  refreshToken String?
+  createdAt    DateTime  @default(now())
 
   topics Topic[]
   posts  Post[]

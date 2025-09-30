@@ -10,6 +10,7 @@ export interface UserUpdateInput {
   email?: string;
   password?: string;
   role?: 'user' | 'moderator' | 'admin';
+  refreshToken?: string;
   avatarPath?: string;
 }
 
@@ -26,5 +27,6 @@ export interface User {
   email: string;
   password: string;
   role: string;
+  refreshToken?: string;
   avatarPath?: string | null;
 }
