@@ -5,6 +5,7 @@ import errorMiddleware from '@middlewares/error.middleware';
 
 const app = express();
 
+app.use(express.json());
 app.use('/api/v1/auth', AuthRoutes);
 app.use(errorMiddleware);
 app.use(notfoundMiddleware);
