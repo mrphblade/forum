@@ -10,8 +10,8 @@
     "format:check": "prettier --check .",
     "format:fix": "prettier --write .",
     "build:ts": "tsc && tsc-alias",
-    "dev": "ts-node -r tsconfig-paths/register src/server.ts",
-    "start": "yarn run build:ts && node dist/server.js"
+    "dev": "cross-env NODE_ENV=development ts-node -r tsconfig-paths/register src/server.ts",
+    "start": "cross-env NODE_ENV=production yarn run build:ts && node dist/server.js"
   },
   "devDependencies": {
     "@eslint/js": "^9.36.0",
@@ -21,6 +21,7 @@
     "@types/node": "^24.5.2",
     "@typescript-eslint/eslint-plugin": "^8.44.1",
     "@typescript-eslint/parser": "^8.44.1",
+    "dotenv": "^17.2.3",
     "eslint": "^9.36.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.4",
