@@ -6,19 +6,27 @@ import emailValidation from '@utils/email.validation';
 import { createTokens, verifyRefreshToken } from '@utils/token.utils';
 import UserRepository from '@repositories/user.repository';
 
-export default class AuthService {
-  private userRepository: UserRepository;
+async function validateRefreshToken(refreshToken: string): Promise<User> {
+  if (!refreshToken) throw ApiError.unauthorized('No refresh token provided');
 
-  constructor() {
-    this.userRepository = new UserRepository();
+  const payload = (await verifyRefreshToken(refreshToken)) as JWTPayload;
+  if (!payload) throw ApiError.unauthorized('Invalid refresh token');
+
+  const user = await UserRepository.findById(payload.id);
+  if (!user || user.refreshToken !== refreshToken) {
+    throw ApiError.unauthorized('Invalid refresh token');
   }
 
-  async register(
+  return user;
+}
+
+export default class AuthService {
+  static async register(
     username: string,
     email: string,
     password: string,
   ): Promise<UserDTO> {
-    const candidate = await this.userRepository.findByEmail(email);
+    const candidate = await UserRepository.findByEmail(email);
 
     if (candidate) {
       throw ApiError.badRequest('User already exists');
@@ -26,16 +34,16 @@ export default class AuthService {
 
     const hashedPassword = await bcrypt.hash(password, 12);
 
-    return await this.userRepository.createUser({
+    return await UserRepository.createUser({
       username,
       email,
       password: hashedPassword,
     });
   }
-  async login(login: string, password: string): Promise<Tokens> {
+  static async login(login: string, password: string): Promise<Tokens> {
     const user = (await emailValidation(login))
-      ? await this.userRepository.findByEmail(login)
-      : await this.userRepository.findByUsername(login);
+      ? await UserRepository.findByEmail(login)
+      : await UserRepository.findByUsername(login);
 
     if (!user) {
       throw ApiError.badRequest('Invalid login or password');
@@ -49,40 +57,26 @@ export default class AuthService {
 
     const tokens = await createTokens(user.id, user.role);
 
-    await this.userRepository.updateUser(user.id, {
+    await UserRepository.updateUser(user.id, {
       refreshToken: tokens.refreshToken,
     });
 
     return tokens;
   }
-  async refreshTokens(refreshToken: string): Promise<Tokens> {
-    const user = await this.validateRefreshToken(refreshToken);
+  static async refreshTokens(refreshToken: string): Promise<Tokens> {
+    const user = await validateRefreshToken(refreshToken);
 
     const tokens = await createTokens(user.id, user.role);
 
-    await this.userRepository.updateUser(user.id, {
+    await UserRepository.updateUser(user.id, {
       refreshToken: tokens.refreshToken,
     });
 
     return tokens;
   }
-  async logout(refreshToken: string): Promise<void> {
-    const user = await this.validateRefreshToken(refreshToken);
+  static async logout(refreshToken: string): Promise<void> {
+    const user = await validateRefreshToken(refreshToken);
 
-    await this.userRepository.updateUser(user.id, { refreshToken: '' });
-  }
-
-  private async validateRefreshToken(refreshToken: string): Promise<User> {
-    if (!refreshToken) throw ApiError.unauthorized('No refresh token provided');
-
-    const payload = (await verifyRefreshToken(refreshToken)) as JWTPayload;
-    if (!payload) throw ApiError.unauthorized('Invalid refresh token');
-
-    const user = await this.userRepository.findById(payload.id);
-    if (!user || user.refreshToken !== refreshToken) {
-      throw ApiError.unauthorized('Invalid refresh token');
-    }
-
-    return user;
+    await UserRepository.updateUser(user.id, { refreshToken: '' });
   }
 }

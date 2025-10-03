@@ -2,13 +2,7 @@ import AuthService from '@services/auth.service';
 import { Request, Response, NextFunction } from 'express';
 
 export default class AuthController {
-  private authService: AuthService;
-
-  constructor() {
-    this.authService = new AuthService();
-  }
-
-  async register(
+  static async register(
     req: Request,
     res: Response,
     next: NextFunction,
@@ -16,7 +10,7 @@ export default class AuthController {
     try {
       const { name, email, password } = req.body;
 
-      const user = await this.authService.register(name, email, password);
+      const user = await AuthService.register(name, email, password);
 
       res.status(201).json({ user, msg: 'User registered successfully.' });
     } catch (e) {
@@ -24,11 +18,15 @@ export default class AuthController {
     }
   }
 
-  async login(req: Request, res: Response, next: NextFunction): Promise<void> {
+  static async login(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
     try {
       const { login, password } = req.body;
 
-      const tokens = await this.authService.login(login, password);
+      const tokens = await AuthService.login(login, password);
 
       const options = {
         httpOnly: true,
@@ -45,7 +43,7 @@ export default class AuthController {
     }
   }
 
-  async refreshTokens(
+  static async refreshTokens(
     req: Request,
     res: Response,
     next: NextFunction,
@@ -53,7 +51,7 @@ export default class AuthController {
     try {
       const refreshToken = req.cookies['refreshToken'];
 
-      const tokens = await this.authService.refreshTokens(refreshToken);
+      const tokens = await AuthService.refreshTokens(refreshToken);
 
       const options = {
         httpOnly: true,
@@ -70,11 +68,15 @@ export default class AuthController {
     }
   }
 
-  async logout(req: Request, res: Response, next: NextFunction): Promise<void> {
+  static async logout(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
     try {
       const refreshToken = req.cookies['refreshToken'];
 
-      await this.authService.logout(refreshToken);
+      await AuthService.logout(refreshToken);
 
       res
         .status(200)

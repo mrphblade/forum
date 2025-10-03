@@ -2,13 +2,11 @@ import { Router } from 'express';
 import AuthController from '@controllers/auth.controller';
 import authMiddleware from '@middlewares/auth.middleware';
 
-const controller = new AuthController();
-
 const r = Router();
 
-r.post('/register', controller.register.bind(controller));
-r.post('/login', controller.login.bind(controller));
-r.get('/refresh', controller.refreshTokens.bind(controller));
-r.delete('/logout', authMiddleware, controller.logout.bind(controller));
+r.post('/register', AuthController.register);
+r.post('/login', AuthController.login);
+r.get('/refresh', AuthController.refreshTokens);
+r.delete('/logout', authMiddleware, AuthController.logout);
 
 export default r;
