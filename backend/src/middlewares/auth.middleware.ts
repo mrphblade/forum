@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { verifyAccessToken } from '@utils/token.utils';
 
 export default async (req: Request, res: Response, next: NextFunction) => {
@@ -10,7 +10,7 @@ export default async (req: Request, res: Response, next: NextFunction) => {
       return res.status(401).json({ msg: 'No token provided' });
     }
 
-    await verifyAccessToken(accessToken);
+    (req as any).user = await verifyAccessToken(accessToken);
 
     return next();
   } catch (e) {
